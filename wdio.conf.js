@@ -1,4 +1,9 @@
-const {getBrowser, getHeadlessArgs} = require('./arg.helper');
+import argHelper from './arg.helper.js';
+import addCustomCommands from './features/support/custom-command.js';
+const { getBrowser, getHeadlessArgs } = argHelper;
+
+// import {getBrowser, getHeadlessArgs} from './arg.helper.js';
+// const {getBrowser, getHeadlessArgs} = require('./arg.helper');
 
 export const config = {
     //
@@ -97,7 +102,7 @@ export const config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: 'http://localhost:3000/',
+    baseUrl: 'http://localhost:3000',
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,
@@ -228,10 +233,10 @@ export const config = {
      */
 
     // ************!!!!!!************
-    // before: function (capabilities, specs) {
-    //     console.log("TEST before hook");
-    //     CustomCommands(browser);
-    // },
+    before: function (capabilities, specs) {
+        console.log("TEST before hook");
+        addCustomCommands(browser);
+    },
     /**
      * Runs before a WebdriverIO command gets executed.
      * @param {string} commandName hook command name

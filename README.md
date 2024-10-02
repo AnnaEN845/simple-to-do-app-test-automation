@@ -1,8 +1,25 @@
 # simple-to-do-app-test-automation
-## Installation
+
+### Used app for testing <https://github.com/AnnaEN845/SimpleToDoApp>
+
+
+## Test automation project installation
 
 Node v16 should be installed together with NPM
 For reports install allure CLI, can be done via NPM:
+
+Fork and Clone the repository:
+
+```bash
+git clone <repository-url>
+cd simple-to-do-app-test-automation
+```
+Install dependencies:
+
+```bash
+npm install
+```
+Instal Allure reporter:
 
 ```bash
 npm install -g allure-commandline
@@ -43,16 +60,16 @@ npm run wdio --browser='edge' --headless='true'
 
 ### running specifig tags
 
-e.g., UploadPicture suite
+e.g., smoke suite
 ```bash
-npm run wdio "@uploadPicture"
+npm run wdio "@smoke"
 
 ```
 ### running with different browser with flags
 
 Tags can be combined
 ```bash
-npm run wdio "@uploadPicture" -- --browser='firefox' --headless='true'
+npm run wdio "@smoke" -- --browser='firefox' --headless='true'
 ```
 
 ### generating an Allure report

@@ -1,0 +1,116 @@
+export class ToDoPage {
+    get todoPageTitle() {
+        return browser.$('//h1[text()="My Todo List"]');
+    }
+    get logedUserName(){
+        return browser.$('#userName');
+    }
+    get buttonLoguot(){
+        return browser.$('//a[@href="/loguot"]');
+    }
+    get newTodoCardTitle(){
+        return browser.$('//h4[contains(normalize-space(),"New Todo")]');
+    }
+    get inputNewTodoTitle(){
+        return browser.$('//input[@name="todotitle"]');
+    }
+    get inputNewTodoDescription(){
+        return browser.$('//input[@name="description"]');
+    }
+    get inputNewTodoDueDate(){
+        return browser.$('//input[@name="dueDate"]');
+    }
+    get inputNewTodoPriority(){
+        return browser.$('//select[@name="priority"]');
+    }
+    get inputNewTodoCategory(){
+        return browser.$('//select[@name="category"]');
+    }
+    get buttonAddTodo(){
+        return browser.$('//button[@type="submit" and contains(normalize-space(),"Add Todo")]');
+    }
+
+
+    constructor() {
+        this.accordionIds = {
+            work: 'workAccordion',
+            personal: 'personalAccordion',
+            shopping: 'shoppingAccordion'
+        };
+    }
+
+    // Base XPath for a specific accordion category
+    getBaseAccordionXPath(accordionCategory) {
+        const id = this.accordionIds[accordionCategory];
+        if (!id) {
+            throw new Error(`Invalid accordion category: ${accordionCategory}`);
+        }
+        return `//div[@id="${id}"]`;
+    }
+
+    // Common XPath for accordion items
+    getAccordionItemXPath() {
+        return `//div[contains(@class, "accordion-item")]`;
+    }
+
+    // Common XPath for accordion header
+    getAccordionHeaderXPath() {
+        return `${this.getAccordionItemXPath()}//*[contains(@class, "accordion-header")]`;
+    }
+
+    // Common XPath for accordion body
+    getAccordionBodyXPath() {
+        return `${this.getAccordionItemXPath()}//*[contains(@class, "accordion-body")]`;
+    }
+
+    // Generic function to get elements based on the provided additional XPath
+    getAccordionElements(accordionCategory, additionalXPath = '') {
+        const baseXPath = this.getBaseAccordionXPath(accordionCategory);
+        return browser.$$(baseXPath + additionalXPath);
+    }
+
+    // Specific getters for accordion items
+    getAccordionListTitle(accordionCategory){
+        return this.getAccordionElements(accordionCategory, '/h2')
+    }
+    getAccordionItems(accordionCategory){
+        return this.getAccordionElements(accordionCategory, this.getAccordionItemXPath());
+    }
+    getAccordionHeaders(accordionCategory) {
+        return this.getAccordionElements(accordionCategory, this.getAccordionHeaderXPath());
+    }
+
+    getAccordionItemsTitles(accordionCategory) {
+        return this.getAccordionElements(accordionCategory, `${this.getAccordionHeaderXPath()}//p`);
+    }
+
+    getAccordionCheckboxes(accordionCategory) {
+        return this.getAccordionElements(accordionCategory, `${this.getAccordionHeaderXPath()}//input[@type="checkbox"]`);
+    }
+
+    getAccordionDeleteBtns(accordionCategory) {
+        return this.getAccordionElements(accordionCategory, `${this.getAccordionHeaderXPath()}//button[@type="submit"]`);
+    }
+
+    getAccordionCollapseBtns(accordionCategory) {
+        return this.getAccordionElements(accordionCategory, `${this.getAccordionHeaderXPath()}//button[contains(@class, "accordion-button")]`);
+    }
+
+    getAccordionDescriptions(accordionCategory) {
+        return this.getAccordionElements(accordionCategory, `${this.getAccordionBodyXPath()}/p[1]`);
+    }
+
+    getAccordionDueDates(accordionCategory) {
+        return this.getAccordionElements(accordionCategory, `${this.getAccordionBodyXPath()}/p[2]`);
+    }
+
+    getAccordionPriorities(accordionCategory) {
+        return this.getAccordionElements(accordionCategory, `${this.getAccordionBodyXPath()}/p[3]`);
+    }
+
+    getAccordionCategories(accordionCategory) {
+        return this.getAccordionElements(accordionCategory, `${this.getAccordionBodyXPath()}/p[4]`);
+    }
+
+
+}

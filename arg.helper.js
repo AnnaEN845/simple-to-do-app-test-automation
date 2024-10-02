@@ -75,7 +75,7 @@ function getHeadless() {
     return capabilityHeadless;
 }
 
-module.exports = {
+export default {
     getBrowser,
     getHeadlessArgs,
     getHeadless
