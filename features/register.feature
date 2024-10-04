@@ -20,7 +20,7 @@ Feature: User Registration
     And I navigate to the register page
 #   And I fill in the registration form an already registered email
 #   | name | email                     | password  |
-#   | John | test1@test.com | 123456Dd@ |
+#   | John | test100@test.com | 123456Dd@ |
     And I submit the registration form
 #   Then I should see an error message saying "Email already in use"
 #   And I should be prompted to log in

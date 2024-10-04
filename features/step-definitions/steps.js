@@ -18,6 +18,10 @@ Then('I navigate to the register page', async()=>{
     await pages.homePage.buttonRegister.waitAndClick();
     await pages.registerPage.registerPageTitle.waitForDisplayed();
 })
+Then('I navigate to the login page', async()=>{
+    await pages.homePage.buttonLogin.waitAndClick();
+    await pages.loginPage.loginPageTitle.waitForDisplayed();
+})
 
 Then('I fill in the registration form with valid credentials', async(dataTable)=>{
         let rows = dataTable.rows();
@@ -37,8 +41,27 @@ Then('I fill in the registration form with valid credentials', async(dataTable)=
         }
       
     })
+    Then('I fill in the login form with valid credentials', async(dataTable)=>{
+        let rows = dataTable.rows();
+        console.log(rows);
+        for await (const row of rows){
+            let name = row[0];
+            logedUserName = name;
+            let email = row[1];
+            let password = row[2];
+
+            await pages.loginPage.inputEmailLoginPage.waitAndSetValue(email);
+            await pages.loginPage.inputPasswordLoginPage.waitAndSetValue(password);
+            
+        }
+
+    })
+
     Then('I submit the registration form',async()=>{
         await pages.registerPage.buttonRegisterRegisterPage.waitAndClick();
+    })
+    Then('I submit the login form', async()=>{
+        await pages.loginPage.buttonLoginLoginPage.waitAndClick();
     })
 
    
@@ -77,8 +100,23 @@ Then('I fill in the registration form with valid credentials', async(dataTable)=
         }
 
     })
+    Then('I have existing to-do items', async(dataTable)=>{
+        let rows = dataTable.rows();
+        for await(const row of rows) {
+            let addedToDoTitle = row[0];
+            let addedToDoDescription = row[1];
+            let addedMm = row[2];
+            let addedDd = row[3];
+            let addedYyyy = row[4];
+            let addedPriority = row[5];
+            let addedCategory = row[6];
 
-    Then('New ToDo are added to the list of categories', async(dataTable)=>{
+            addedToDoItem = {title:addedToDoTitle, description:addedToDoDescription, dueDate:addedYyyy+"-"+addedMm+"-"+addedDd, priority: addedPriority, category: addedCategory};
+            addedNewToDo.push(addedToDoItem);
+        }
+    })
+
+    Then('I should see a list of my to-do items grouped by 3 category', async(dataTable)=>{
         let listsTitlesExpected =[];
         let listTitlesActual =[];
         let rows = dataTable.rows();
