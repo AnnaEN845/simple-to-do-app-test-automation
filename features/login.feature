@@ -31,7 +31,7 @@ Feature: User Login
     | tes@test.com              | 123456Dd@  | Invalid email or password|
 
 
-    @end2end @test
+    @end2end
     Scenario: Login with missing credentials
     Given I open landing page
     And I navigate to the login page

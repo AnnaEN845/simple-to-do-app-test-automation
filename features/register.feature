@@ -14,16 +14,16 @@ Feature: User Registration
     And I submit the registration form
     Then I am redirected to my to-do list page
 
-    @end2end
+    @end2end 
     Scenario: Registration with an existing email
     Given I open landing page
     And I navigate to the register page
-#   And I fill in the registration form an already registered email
-#   | name | email                     | password  |
-#   | John | test100@test.com | 123456Dd@ |
+    And I fill in the registration form with an already registered email 
+    | name | email                     | password  |
+    | John | test100@test.com          | 123456Dd@ |
     And I submit the registration form
-#   Then I should see an error message saying "Email already in use"
-#   And I should be prompted to log in
+    Then I should see an error message saying "Email already in use"
+
 
     @end2end
     Scenario: Registration with invalid password
@@ -34,3 +34,14 @@ Feature: User Registration
 #   | John | testRANDOMNUMBER@test.com | 123456 |
     And I submit the registration form
 #   Then I should see an error message for invalid password requirements
+
+    @end2end
+    Scenario: Login and Register new user buttons displayed after registration with an existing email
+    Given I open landing page
+    And I navigate to the register page
+    And I fill in the registration form with an already registered email 
+    | name | email                     | password  |
+    | John | test100@test.com          | 123456Dd@ |
+    And I submit the registration form
+    And I should see an error message saying "Email already in use"
+    Then I should see a Login and Register New User buttons

@@ -15,7 +15,7 @@ export class RegisterPage {
         return browser.$('//*[@id="registerBtn"]');
     }
     get errorMessagesRegisterPage(){
-        return browser.$('//ul/li')
+        return browser.$$('//ul/li')
     }
     get hyperlinkToLoginRegisterPage(){
         return browser.$('//a[@href="/login" and contains(normalize-space(), "Login")]')

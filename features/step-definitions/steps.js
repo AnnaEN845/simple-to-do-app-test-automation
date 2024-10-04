@@ -14,10 +14,12 @@ Given('I open landing page', async ()=>{
     await browser.pause(3000);
 
 })
+
 Then('I navigate to the register page', async()=>{
     await pages.homePage.buttonRegister.waitAndClick();
     await pages.registerPage.registerPageTitle.waitForDisplayed();
 })
+
 Then('I navigate to the login page', async()=>{
     await pages.homePage.buttonLogin.waitAndClick();
     await pages.loginPage.loginPageTitle.waitForDisplayed();
@@ -40,8 +42,25 @@ Then('I fill in the registration form with valid credentials', async(dataTable)=
             
         }
       
-    })
-    Then('I fill in the login form with valid credentials', async(dataTable)=>{
+})
+
+Then('I fill in the registration form with an already registered email',async(dataTable)=>{
+    let rows = dataTable.rows();
+    console.log(rows);
+    for await (const row of rows){
+        let name = row[0];
+        logedUserName = name;
+        let email = row[1];
+        let password = row[2];
+
+        await pages.registerPage.intupNameRegisterPage.waitAndSetValue(name);
+        await pages.registerPage.intupEmailRegisterPage.waitAndSetValue(email);
+        await pages.registerPage.intupPasswordRegisterPage.waitAndSetValue(password);
+        
+    }
+})
+
+Then('I fill in the login form with valid credentials', async(dataTable)=>{
         let rows = dataTable.rows();
         console.log(rows);
         for await (const row of rows){
@@ -53,43 +72,62 @@ Then('I fill in the registration form with valid credentials', async(dataTable)=
             await pages.loginPage.inputEmailLoginPage.waitAndSetValue(email);
             await pages.loginPage.inputPasswordLoginPage.waitAndSetValue(password);            
         }
-    })
+})
 
-    Then('I fill in the login form with invalid credentials', async(dataTable)=>{
+Then('I fill in the login form with invalid credentials', async(dataTable)=>{
         let [email, password] = dataTable.raw()[0];  
         await pages.loginPage.inputEmailLoginPage.waitAndSetValue(email);
         await pages.loginPage.inputPasswordLoginPage.waitAndSetValue(password); 
         
 
-    })
-    Then('I should see an errorMessage',async(dataTable)=>{
+})
+
+Then('I should see an errorMessage',async(dataTable)=>{
         let[errorMessage] = dataTable.raw()[0];
         let expectedErrorMessage = errorMessage;
         await pages.loginPage.errorMessageLoginPage.waitForDisplayed();
         let actualErrorMessage = await pages.loginPage.errorMessageLoginPage.getText();
         await expect(actualErrorMessage).toEqual(expectedErrorMessage);
-    })
-    Then('I should see an error message "Missing credentials"', async()=>{
+})
+
+Then('I should see an error message "Missing credentials"', async()=>{
         let expectedErrorMessage = "Missing credentials";
         await pages.loginPage.errorMessageLoginPage.waitForDisplayed();
         let actualErrorMessage = await pages.loginPage.errorMessageLoginPage.getText();
         await expect(actualErrorMessage).toEqual(expectedErrorMessage);
-    })
-    Then('I submit the registration form',async()=>{
-        await pages.registerPage.buttonRegisterRegisterPage.waitAndClick();
-    })
-    Then('I submit the login form', async()=>{
-        await pages.loginPage.buttonLoginLoginPage.waitAndClick();
-    })
+})
 
-   
-    Then('I am redirected to my to-do list page', async()=>{
+Then('I should see an error message saying "Email already in use"',async()=>{
+    let expectedErrorMessage = "Email already in use";
+    let errorMesage = await pages.registerPage.errorMessagesRegisterPage[0];
+    await errorMesage.waitForDisplayed();
+    
+    let actualErrorMessage = await errorMesage.getText();
+    await expect(actualErrorMessage).toEqual(expectedErrorMessage);
+})
+
+Then('I should see a Login and Register New User buttons', async()=>{
+    let loginBtn = await pages.registerPage.hyperlinkToLoginRegisterPage;
+    let registerNewUserBtn = await pages.registerPage.hyperlinkToRegisterRegisterPage;
+    await expect(loginBtn).toBeDisplayed({ timeout: 2000 });
+    await expect(registerNewUserBtn).toBeDisplayed({ timeout: 2000 });
+})
+
+Then('I submit the registration form',async()=>{
+        await pages.registerPage.buttonRegisterRegisterPage.waitAndClick();
+})
+
+Then('I submit the login form', async()=>{
+        await pages.loginPage.buttonLoginLoginPage.waitAndClick();
+})
+
+Then('I am redirected to my to-do list page', async()=>{
         await pages.toDoPage.todoPageTitle.waitForDisplayed();
         let actualLogedUserName = await pages.toDoPage.logedUserName.getText();
         await expect(actualLogedUserName).toEqual(logedUserName);
-    })
+})
 
-    Then('I have added a new ToDo', async(dataTable)=>{
+Then('I have added a new ToDo', async(dataTable)=>{
         await pages.toDoPage.newTodoCardTitle.waitForDisplayed();
         let rows = dataTable.rows();
         for await(const row of rows) {
@@ -117,8 +155,9 @@ Then('I fill in the registration form with valid credentials', async(dataTable)=
 
         }
 
-    })
-    Then('I have existing to-do items', async(dataTable)=>{
+})
+
+Then('I have existing to-do items', async(dataTable)=>{
         let rows = dataTable.rows();
         for await(const row of rows) {
             let addedToDoTitle = row[0];
@@ -132,9 +171,9 @@ Then('I fill in the registration form with valid credentials', async(dataTable)=
             addedToDoItem = {title:addedToDoTitle, description:addedToDoDescription, dueDate:addedYyyy+"-"+addedMm+"-"+addedDd, priority: addedPriority, category: addedCategory};
             addedNewToDo.push(addedToDoItem);
         }
-    })
+})
 
-    Then('I should see a list of my to-do items grouped by 3 category', async(dataTable)=>{
+Then('I should see a list of my to-do items grouped by 3 category', async(dataTable)=>{
         let listsTitlesExpected =[];
         let listTitlesActual =[];
         let rows = dataTable.rows();
@@ -181,6 +220,6 @@ Then('I fill in the registration form with valid credentials', async(dataTable)=
                 console.error(error.message);
                 throw new Error(`Test failed due to mismatching to-do items: ${error.message}`);
               }
-    })
+})
 
 
