@@ -15,14 +15,28 @@ Feature: User Login
     And I submit the login form
     Then I am redirected to my to-do list page
 
-    @end2end
-    Scenario: Login with invalid credentials
+    @end2end 
+    Scenario Outline:: Login with invalid credentials
     Given I open landing page
     And I navigate to the login page
-#     When I fill in the login form with invalid credentials
+    And I fill in the login form with invalid credentials
 # user must be in the DB, functionality for registering new users via API will be added
-# | name | email                     | password  |
-# | John | test100@test.com | 123456 |
-# | John | tes@test.com | 123456Dd@  |
+    | <email>              | <password>   |
     And I submit the login form
-#     Then I should see an error message saying "Invalid email or password"
+    Then I should see an errorMessage
+    | <errorMessage>|
+    Examples:
+    | email                     | password   | errorMessage             |
+    | test100@test.com          | 123456     | Invalid email or password|
+    | tes@test.com              | 123456Dd@  | Invalid email or password|
+
+
+    @end2end @test
+    Scenario: Login with missing credentials
+    Given I open landing page
+    And I navigate to the login page
+    And I submit the login form
+    Then I should see an error message "Missing credentials"
+
+
+ 

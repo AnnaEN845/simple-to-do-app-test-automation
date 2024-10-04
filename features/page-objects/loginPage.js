@@ -13,7 +13,7 @@ export class LoginPage {
     }
 
     get errorMessageLoginPage(){
-        return browser.$('*[@id="error-messages"]/div');
+        return browser.$('//*[@id="error-messages"]/div');
     }
     
 }

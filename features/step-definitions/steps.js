@@ -51,12 +51,30 @@ Then('I fill in the registration form with valid credentials', async(dataTable)=
             let password = row[2];
 
             await pages.loginPage.inputEmailLoginPage.waitAndSetValue(email);
-            await pages.loginPage.inputPasswordLoginPage.waitAndSetValue(password);
-            
+            await pages.loginPage.inputPasswordLoginPage.waitAndSetValue(password);            
         }
-
     })
 
+    Then('I fill in the login form with invalid credentials', async(dataTable)=>{
+        let [email, password] = dataTable.raw()[0];  
+        await pages.loginPage.inputEmailLoginPage.waitAndSetValue(email);
+        await pages.loginPage.inputPasswordLoginPage.waitAndSetValue(password); 
+        
+
+    })
+    Then('I should see an errorMessage',async(dataTable)=>{
+        let[errorMessage] = dataTable.raw()[0];
+        let expectedErrorMessage = errorMessage;
+        await pages.loginPage.errorMessageLoginPage.waitForDisplayed();
+        let actualErrorMessage = await pages.loginPage.errorMessageLoginPage.getText();
+        await expect(actualErrorMessage).toEqual(expectedErrorMessage);
+    })
+    Then('I should see an error message "Missing credentials"', async()=>{
+        let expectedErrorMessage = "Missing credentials";
+        await pages.loginPage.errorMessageLoginPage.waitForDisplayed();
+        let actualErrorMessage = await pages.loginPage.errorMessageLoginPage.getText();
+        await expect(actualErrorMessage).toEqual(expectedErrorMessage);
+    })
     Then('I submit the registration form',async()=>{
         await pages.registerPage.buttonRegisterRegisterPage.waitAndClick();
     })
