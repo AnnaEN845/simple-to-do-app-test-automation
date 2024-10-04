@@ -14,11 +14,12 @@ Given('I open landing page', async ()=>{
     await browser.pause(3000);
 
 })
+Then('I navigate to the register page', async()=>{
+    await pages.homePage.buttonRegister.waitAndClick();
+    await pages.registerPage.registerPageTitle.waitForDisplayed();
+})
 
-Then('I have registered account with a new user', async(dataTable)=>{
-        await pages.homePage.buttonRegister.waitAndClick();
-        await pages.registerPage.registerPageTitle.waitForDisplayed();
-
+Then('I fill in the registration form with valid credentials', async(dataTable)=>{
         let rows = dataTable.rows();
         console.log(rows);
         for await (const row of rows){
@@ -32,13 +33,18 @@ Then('I have registered account with a new user', async(dataTable)=>{
             await pages.registerPage.intupNameRegisterPage.waitAndSetValue(name);
             await pages.registerPage.intupEmailRegisterPage.waitAndSetValue(modifiedEmail);
             await pages.registerPage.intupPasswordRegisterPage.waitAndSetValue(password);
-            await pages.registerPage.buttonRegisterRegisterPage.waitAndClick();
+            
         }
       
     })
+    Then('I submit the registration form',async()=>{
+        await pages.registerPage.buttonRegisterRegisterPage.waitAndClick();
+    })
 
-    Then('I have logged with a new user', async()=>{
-        let actualLogedUserName = await pages.toDoPage.logedUserName.getText()
+   
+    Then('I am redirected to my to-do list page', async()=>{
+        await pages.toDoPage.todoPageTitle.waitForDisplayed();
+        let actualLogedUserName = await pages.toDoPage.logedUserName.getText();
         await expect(actualLogedUserName).toEqual(logedUserName);
     })
 
@@ -90,6 +96,11 @@ Then('I have registered account with a new user', async(dataTable)=>{
             for (let y=0; y < itemsInList.length; y++){
                 let collapseBtn = await pages.toDoPage.getAccordionCollapseBtns(listsTitlesExpected[i])[y];
                 await collapseBtn.click();
+
+                await pages.toDoPage.getAccordionDescriptions(listsTitlesExpected[i])[y].waitForDisplayed({ timeout: 5000 });
+                await pages.toDoPage.getAccordionDueDates(listsTitlesExpected[i])[y].waitForDisplayed({ timeout: 5000 });
+                await pages.toDoPage.getAccordionCategories(listsTitlesExpected[i])[y].waitForDisplayed({ timeout: 5000 });
+                await pages.toDoPage.getAccordionPriorities(listsTitlesExpected[i])[y].waitForDisplayed({ timeout: 5000 });
                 let itemTitle = await pages.toDoPage.getAccordionItemsTitles(listsTitlesExpected[i])[y].getText();
                 let itemDescriprion = await pages.toDoPage.getAccordionDescriptions(listsTitlesExpected[i])[y].getText();
                 
@@ -101,7 +112,7 @@ Then('I have registered account with a new user', async(dataTable)=>{
                 let itemPriority = itemPriorityFull.replace('Priority: ','')
                 let toDoItem = {title:itemTitle, description:itemDescriprion, dueDate:itemDueDate, priority: itemPriority.toLowerCase(), category: itemCategory.toLowerCase()};
                 toDoItemsInLists.push(toDoItem);
-                await browser.pause(1000);
+                
             }
             
             }

@@ -52,10 +52,10 @@ To run only on FF:
 ```bash
 npm run wdio -- --browser='firefox' --headless='true'
 ```
-To run only on FF:
+To run only on Edge:
 
 ```bash
-npm run wdio --browser='edge' --headless='true'
+npm run wdio -- --browser='edge' --headless='true'
 ```
 
 ### running specifig tags
@@ -69,7 +69,7 @@ npm run wdio "@smoke"
 
 Tags can be combined
 ```bash
-npm run wdio "@smoke" -- --browser='firefox' --headless='true'
+npm run wdio "@smoke" -- --browser='edge' --headless='true'
 ```
 
 ### generating an Allure report
