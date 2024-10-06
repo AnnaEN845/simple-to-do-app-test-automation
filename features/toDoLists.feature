@@ -1,10 +1,10 @@
-@todo @end2end
+@todo
 Feature: To-Do List Management
   As a logged-in user
   I want to manage my to-do items
   So that I can track my tasks
 
-    @end2end @smoke
+    @smoke @happy-path @end2end
     Scenario: Adding a new to-do item
     Given I open landing page
     And I navigate to the register page
@@ -23,8 +23,8 @@ Feature: To-Do List Management
     | work         | personal   | shopping   |
 
 
-    @smoke 
-    Scenario: Viewing to-do items
+    @smoke @happy-path 
+    Scenario: Viewing to-do items in the list
     Given I open landing page
     And I navigate to the login page
     And I fill in the login form with valid credentials
@@ -42,8 +42,8 @@ Feature: To-Do List Management
     | work         | personal   | shopping   |
 
 
-    @end2end
-    Scenario: Marking a to-do item as completed
+    @regression @happy-path
+    Scenario: Marking a to-do item as completed in the list
     Given I open landing page
     And I navigate to the login page
     And I fill in the login form with valid credentials
@@ -61,8 +61,8 @@ Feature: To-Do List Management
 #     When I mark a to-do item as completed
 #     Then the item should be marked as completed in the list
 
-    @end2end
-    Scenario: Deleting a to-do item
+    @regression @happy-path
+    Scenario: Deleting a to-do item in the list
     Given I open landing page
     And I navigate to the login page
     And I fill in the login form with valid credentials

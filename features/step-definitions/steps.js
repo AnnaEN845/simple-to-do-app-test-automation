@@ -60,6 +60,15 @@ Then('I fill in the registration form with an already registered email',async(da
     }
 })
 
+Then('I fill in the registration form with an invalid password',async(dataTable)=>{
+    let [name, email, password] = dataTable.raw()[0];
+    let randomNum = Math.floor(Math.random() * 10000); 
+    let modifiedEmail = email.replace('RANDOMNUMBER', randomNum.toString());
+    await pages.registerPage.intupNameRegisterPage.waitAndSetValue(name);
+    await pages.registerPage.intupEmailRegisterPage.waitAndSetValue(modifiedEmail);
+    await pages.registerPage.intupPasswordRegisterPage.waitAndSetValue(password);
+})
+
 Then('I fill in the login form with valid credentials', async(dataTable)=>{
         let rows = dataTable.rows();
         console.log(rows);
@@ -82,6 +91,22 @@ Then('I fill in the login form with invalid credentials', async(dataTable)=>{
 
 })
 
+Then('I should see an error message for invalid password requirements',async(dataTable)=>{
+    let expectedErrorMessage = dataTable.raw().flat()[0]; 
+
+    console.log(expectedErrorMessage)
+    let actualErrorMessagesElements = await pages.registerPage.errorMessagesRegisterPage;
+    let actualErrorMessages=[];
+   
+    for(let i = 0; i < actualErrorMessagesElements.length; i++) {
+      let errorMesageText = await pages.registerPage.errorMessagesRegisterPage[i].getText();
+      actualErrorMessages.push(errorMesageText);
+    }
+    console.log(actualErrorMessages);
+    expect(actualErrorMessages).toContain(expectedErrorMessage);
+    console.log(expectedErrorMessage + " is in the array");
+})
+
 Then('I should see an errorMessage',async(dataTable)=>{
         let[errorMessage] = dataTable.raw()[0];
         let expectedErrorMessage = errorMessage;
@@ -97,7 +122,7 @@ Then('I should see an error message "Missing credentials"', async()=>{
         await expect(actualErrorMessage).toEqual(expectedErrorMessage);
 })
 
-Then('I should see an error message saying "Email already in use"',async()=>{
+Then('I should see an error message saying "Email already in use"', async()=>{
     let expectedErrorMessage = "Email already in use";
     let errorMesage = await pages.registerPage.errorMessagesRegisterPage[0];
     await errorMesage.waitForDisplayed();
@@ -106,11 +131,49 @@ Then('I should see an error message saying "Email already in use"',async()=>{
     await expect(actualErrorMessage).toEqual(expectedErrorMessage);
 })
 
+Then('I should see the following error messages:', async(dataTable) => {
+
+  const expectedMessages = dataTable.raw().flat();
+    console.log(expectedMessages);
+
+  let actualErrorMessagesElements = await pages.registerPage.errorMessagesRegisterPage;
+  let actualErrorMessages=[];
+ 
+  for(let i = 0; i < actualErrorMessagesElements.length; i++) {
+    let errorMesageText = await pages.registerPage.errorMessagesRegisterPage[i].getText();
+    actualErrorMessages.push(errorMesageText);
+  }
+  console.log(actualErrorMessages);
+
+  expectedMessages.forEach((expectedMessage) => {
+    expect(actualErrorMessages).toContain(expectedMessage);
+    console.log(expectedMessage + " is in the array");  
+  });
+  })
+
 Then('I should see a Login and Register New User buttons', async()=>{
     let loginBtn = await pages.registerPage.hyperlinkToLoginRegisterPage;
     let registerNewUserBtn = await pages.registerPage.hyperlinkToRegisterRegisterPage;
     await expect(loginBtn).toBeDisplayed({ timeout: 2000 });
     await expect(registerNewUserBtn).toBeDisplayed({ timeout: 2000 });
+})
+
+Then('I click on Login button', async()=>{
+    await pages.registerPage.hyperlinkToLoginRegisterPage.click();
+})
+
+Then('I click on Register New User button', async()=>{
+    await pages.registerPage.hyperlinkToRegisterRegisterPage.click();
+})
+
+Then('I on login page',async()=>{
+    await pages.loginPage.loginPageTitle.waitForDisplayed();
+})
+
+Then('I on register page',async()=>{
+    await pages.registerPage.registerPageTitle.waitForDisplayed();
+    let registerBtn = await pages.registerPage.buttonRegisterRegisterPage;
+    await expect(registerBtn).toBeDisplayed();  
 })
 
 Then('I submit the registration form',async()=>{

@@ -1,10 +1,10 @@
-@login @end2end
+@login
 Feature: User Login
   As a registered user
   I want to log in
   So that I can access my to-do list
 
-    @smoke 
+    @smoke @happy-path
     Scenario: Successful login
     Given I open landing page
     And I navigate to the login page
@@ -15,8 +15,8 @@ Feature: User Login
     And I submit the login form
     Then I am redirected to my to-do list page
 
-    @end2end 
-    Scenario Outline:: Login with invalid credentials
+    @regression @negative @end2end
+    Scenario Outline: Login with invalid credentials
     Given I open landing page
     And I navigate to the login page
     And I fill in the login form with invalid credentials
@@ -31,8 +31,8 @@ Feature: User Login
     | tes@test.com              | 123456Dd@  | Invalid email or password|
 
 
-    @end2end
-    Scenario: Login with missing credentials
+    @regression @negative
+    Scenario: Show error message when login is attempted without credentials.
     Given I open landing page
     And I navigate to the login page
     And I submit the login form
