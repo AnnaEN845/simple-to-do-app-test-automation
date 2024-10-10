@@ -34,10 +34,10 @@ npm install -g allure-commandline
 
 ### Running the tests
 
-To run all tests on FF and Chrome:
+To run all tests on Chrome:
 
 ```bash
-npm run wdio
+npx wdio run ./wdio.conf.js
 ```
 
 ### headless

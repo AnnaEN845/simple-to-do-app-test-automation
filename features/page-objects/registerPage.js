@@ -23,4 +23,9 @@ export class RegisterPage {
     get hyperlinkToRegisterRegisterPage(){
         return browser.$('//a[@href="/register" and contains(normalize-space(), "Register New User")]')
     }
+    async fillRegistrationForm(name, email, password){
+        await this.intupNameRegisterPage.waitAndSetValue(name);
+        await this.intupEmailRegisterPage.waitAndSetValue(email);
+        await this.intupPasswordRegisterPage.waitAndSetValue(password);
+    }
 }

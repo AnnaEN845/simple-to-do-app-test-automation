@@ -4,10 +4,13 @@ Feature: User Registration
   I want to register on the app
   So that I can create a to-do list
 
-    @smoke @happy-path @end2end
-    Scenario: Successful registration
+  Background:
     Given I open landing page
     And I navigate to the register page
+
+
+    @smoke @happy-path @end2end
+    Scenario: Successful registration
     And I fill in the registration form with valid credentials 
     | name | email                     | password  |
     | John | testRANDOMNUMBER@test.com | 123456Dd@ |
@@ -15,19 +18,20 @@ Feature: User Registration
     Then I am redirected to my to-do list page
 
     @regression @negative 
-    Scenario: Prevent registration with an already registered emai
-    Given I open landing page
-    And I navigate to the register page
+    Scenario Outline: Prevent registration with an already registered emai
     And I fill in the registration form with an already registered email 
-    | name | email                     | password  |
-    | John | test100@test.com          | 123456Dd@ |
+    | <name> | <email> | <password> |
     And I submit the registration form
-    Then I should see an error message saying "Email already in use"
+    # Then I should see an error message saying "Email already in use"
+    Then I should see an errorMessage on Register Page
+    | <errorMessage>|
+    Examples:
+    | name | email            | password  | errorMessage         |
+    | John | test100@test.com | 123456Dd@ | Email already in use |
+
 
     @regression @negative 
     Scenario: Registration with missing credentials
-    Given I open landing page
-    And I navigate to the register page
     And I submit the registration form
     Then I should see the following error messages:
     | Name is required                                            |
@@ -36,44 +40,45 @@ Feature: User Registration
     | Password must include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&) |
 
 
-    @regression @ux
-    Scenario: Login and Register new user buttons displayed after registration with an existing email
-    Given I open landing page
-    And I navigate to the register page
+    @regression @ux 
+    Scenario Outline: Login and Register new user buttons displayed after registration with an existing email
     And I fill in the registration form with an already registered email 
-    | name | email                     | password  |
-    | John | test100@test.com          | 123456Dd@ |
+    | <usedName> | <usedEmail> | <usedPassword> |
     And I submit the registration form
-    And I should see an error message saying "Email already in use"
+    And I should see an errorMessage on Register Page
+    | <errorMessage>|
     Then I should see a Login and Register New User buttons
+    Examples:
+    | usedName | usedEmail        | usedPassword | errorMessage         |
+    | John     | test100@test.com | 123456Dd@    | Email already in use |
 
-    @regression @integration @end2end
-    Scenario: Handle login after attempting registration with an already registered email
-    Given I open landing page
-    And I navigate to the register page
+    @regression @integration @end2end 
+    # ----------var parveidot par outline------ 
+    Scenario Outline: Handle login after attempting registration with an already registered email
     And I fill in the registration form with an already registered email 
-    | name | email                     | password  |
-    | John | test100@test.com          | 123456Dd@ |
+     | <usedName> | <usedEmail> | <usedPassword> |
     And I submit the registration form
-    And I should see an error message saying "Email already in use"
+    And I should see an errorMessage on Register Page
+    | <errorMessage>|
     And I should see a Login and Register New User buttons
     And I click on Login button
     And I on login page
     And I fill in the login form with valid credentials
-    | name | email                     | password  |
-    | John | test100@test.com          | 123456Dd@ |
+    | <name> | <email> | <password> |
     And I submit the login form
     Then I am redirected to my to-do list page
+    Examples:
+    | usedName | usedEmail        | usedPassword | errorMessage         | name | email            | password |
+    | John     | test100@test.com | 123456Dd@    | Email already in use | John | test100@test.com | 123456Dd@ |
 
-    @regression @integration @end2end
-    Scenario: Handle new user registration after attempting registration with an already registered email
-    Given I open landing page
-    And I navigate to the register page
+
+    @regression @integration @end2end 
+    Scenario Outline: Handle new user registration after attempting registration with an already registered email
     And I fill in the registration form with an already registered email 
-    | name | email                     | password  |
-    | John | test100@test.com          | 123456Dd@ |
+     | <usedName> | <usedEmail> | <usedPassword> |
     And I submit the registration form
-    And I should see an error message saying "Email already in use"
+    And I should see an errorMessage on Register Page
+    | <errorMessage>|
     And I should see a Login and Register New User buttons
     And I click on Register New User button
     And I on register page
@@ -82,11 +87,12 @@ Feature: User Registration
     | John | testRANDOMNUMBER@test.com | 123456Dd@ |
     And I submit the registration form
     Then I am redirected to my to-do list page
+    Examples:
+    | usedName | usedEmail        | usedPassword | errorMessage         |
+    | John     | test100@test.com | 123456Dd@    | Email already in use |
 
     @regression @negative
     Scenario Outline: Registration with invalid password
-    Given I open landing page
-    And I navigate to the register page
     And I fill in the registration form with an invalid password
     | <name> | <email>           | <password>   |
     And I submit the registration form

@@ -153,7 +153,7 @@ export const config = {
     // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {
         // <string[]> (file/dir) require files before executing features
-        require: ['./features/step-definitions/**/*.js', './features/support/**/*.js'],
+        require: ['./features/step-definitions/**/*.js', './features/support/**/*.js', './features/support/hooks.js'],
         // <boolean> show full backtrace for errors
         backtrace: false,
         // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
@@ -261,8 +261,20 @@ export const config = {
      */
 
     // ************!!!!!!!!!!***********
-    // beforeScenario: function (world, context) {
-    //     require('./features/support/world').call(world);
+
+    // beforeScenario: async (world) => {
+    //     console.log('Starting new session before scenario: ', world.pickle.name);
+
+    //     // Open a new browser session
+    //     await browser.reloadSession();
+    
+    //     // Manually navigate to the base URL
+    //     const baseUrl = browser.config.baseUrl; // Get the base URL from your wdio.conf.js
+    //     if (baseUrl) {
+    //         await browser.url(baseUrl); // Navigate to the base URL
+    //     } else {
+    //         console.warn('Base URL is not defined in the configuration');
+    //     }
         
     // },
     /**

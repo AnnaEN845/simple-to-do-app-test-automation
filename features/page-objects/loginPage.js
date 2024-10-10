@@ -15,5 +15,8 @@ export class LoginPage {
     get errorMessageLoginPage(){
         return browser.$('//*[@id="error-messages"]/div');
     }
-    
+    async fillLoginForm(email, password){
+        await this.inputEmailLoginPage.waitAndSetValue(email);
+        await this.inputPasswordLoginPage.waitAndSetValue(password);
+    }
 }
