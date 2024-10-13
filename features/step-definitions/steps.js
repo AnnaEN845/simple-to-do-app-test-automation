@@ -1,7 +1,9 @@
 import { Given, When, Then } from '@wdio/cucumber-framework';
-import { expect, $ } from '@wdio/globals';
+import { expect, $, browser } from '@wdio/globals';
 import { pages } from "../support/pages";
 import { customFunctions } from '../support/custom-functions';
+import User from '../support/api-helpers/user';
+import UserData from '../support/data/userData';
 
 let logedUserName = "";
 let addedNewToDo = [];
@@ -9,6 +11,9 @@ let addedToDoItem = {};
 let toDoItemsInLists =[];
 let expectedCategoriesCheked =[];
 let expectedCategoriesDelete =[];
+let userApi;
+let baseUrl = browser.options.baseUrl;
+let userData = new UserData();
 
 
 Given('I open landing page', async ()=>{
@@ -26,6 +31,54 @@ Then('I navigate to the login page', async()=>{
     await pages.loginPage.loginPageTitle.waitForDisplayed({ timeout: 3000 });
 })
 
+Then('I have registered a new user- api', async () => {
+    userApi = new User(baseUrl);
+    let name = "John";
+    let curTime = new Date().valueOf();
+    let newEmail = `test${curTime}@test.com`;
+    let newPassword = '123456Dd@';
+
+    let registrationResult = await userApi.createUser(name, newEmail, newPassword);
+
+    if (registrationResult.success) {
+        userData.registeredUserName = name;
+        userData.registeredUserEmail = newEmail;
+        userData.registeredUserPassword = newPassword;
+        logedUserName = userData.registeredUserName;
+        console.log('User registered successfully:', userData);
+    } else {
+        console.error('Registration failed:', registrationResult.message);
+        throw new Error(`Registration failed: ${registrationResult.message}`);
+    }
+});
+
+Then('I create multiple todos for the registered user via API', async (dataTable) => {
+    if (!userData.registeredUserEmail || !userData.registeredUserPassword) {
+        throw new Error('User must be registered before creating todos');
+    }
+
+    let todos = dataTable.hashes();
+    for (const todo of todos) {
+        const todoResult = await userApi.createTodo(
+            todo.title,
+            todo.description,
+            todo.dueDate,
+            todo.priority,
+            todo.category
+        );
+
+        if (todoResult.success) {
+            console.log(`Todo "${todo.title}" created successfully`);
+            addedToDoItem = {title:todo.title.toLowerCase(), description:todo.description.toLowerCase(), dueDate:todo.dueDate, priority: todo.priority.toLowerCase(), category: todo.category.toLowerCase()};
+            addedNewToDo.push(addedToDoItem);
+        } else {
+            throw new Error(`Failed to create todo "${todo.title}": ${todoResult.message}`);
+        }
+    }
+    console.log(addedNewToDo);
+});
+
+
 Then('I fill in the registration form with valid credentials', async(dataTable)=>{
     let [name, email, password] = dataTable.rows()[0];
     logedUserName = name;
@@ -38,6 +91,11 @@ Then('I fill in the registration form with an already registered email',async(da
     let [usedName, usedEmail, usedPassword] = dataTable.raw()[0];
     logedUserName = usedName;
     await pages.registerPage.fillRegistrationForm(usedName, usedEmail, usedPassword);
+})
+
+Then('I fill in the registration form with an already registered using API email', async()=>{
+    await pages.registerPage.fillRegistrationForm(userData.registeredUserName, userData.registeredUserEmail, userData.registeredUserPassword);
+
 })
 
 Then('I fill in the registration form with an invalid password',async(dataTable)=>{
@@ -53,9 +111,23 @@ Then('I fill in the login form with valid credentials', async(dataTable)=>{
     await pages.loginPage.fillLoginForm(email, password);
 })
 
+Then('I fill in the login form with new user valid credentials',async()=>{
+    await pages.loginPage.fillLoginForm(userData.registeredUserEmail, userData.registeredUserPassword);
+})
+
 Then('I fill in the login form with invalid credentials', async(dataTable)=>{
         let [email, password] = dataTable.raw()[0]; 
         await pages.loginPage.fillLoginForm(email, password);  
+})
+
+Then('I fill in the login form with new user invalid password', async(dataTable)=>{
+        let [password] = dataTable.raw()[0];
+        await pages.loginPage.fillLoginForm(userData.registeredUserEmail, password);
+})
+
+Then('I fill in the login form with new user invalid email', async(dataTable)=>{
+    let [email] = dataTable.raw()[0];
+    await pages.loginPage.fillLoginForm(email, userData.registeredUserPassword);
 })
 
 Then('I should see an error message for invalid password requirements',async(dataTable)=>{
@@ -191,6 +263,35 @@ Then('I have existing to-do items', async(dataTable)=>{
         }
 })
 
+Then('I should see all the added items in the list category',async()=>{
+    let addedListsTitles = [...new Set(addedNewToDo.map(todo => todo.category.toLowerCase()))];
+    console.log(addedListsTitles);
+
+    for (const category of addedListsTitles) {
+        let listTitle = await pages.toDoPage.getAccordionListTitle(category);
+        let listTitleText = await listTitle[0].getText();
+        expect(listTitleText.toLowerCase()).toEqual(category.toLowerCase());
+
+        let categoryItems = await pages.toDoPage.getAllToDoItemsInCategory(category);
+        toDoItemsInLists.push(...categoryItems);
+    }
+
+    console.log(toDoItemsInLists);
+
+    try {
+        customFunctions.compareToDoArrays(addedNewToDo, toDoItemsInLists);
+        console.log('To-do items match!');
+    } catch (error) {
+        console.error(error.message);
+        throw new Error(`Test failed due to mismatching to-do items: ${error.message}`);
+    }
+})
+
+Then('I refresh the browser', async()=>{
+    await browser.refresh();
+    await browser.pause(2000);
+})
+
 Then('I should see a list of my to-do items grouped by category', async(dataTable)=>{
     const listsTitlesExpected = dataTable.raw().flat();
 
@@ -255,7 +356,6 @@ Then('I delete all to-do items in category list',async(dataTable)=>{
         for (let y=0; y < itemsInList.length; y++){
             let itemsDeleteBtn = await pages.toDoPage.getAccordionDeleteBtns(expectedCategoriesDelete[i])[y];
             await itemsDeleteBtn.click();
-            // await browser.pause(2000);
         }
     }
 
@@ -266,6 +366,11 @@ Then('I should see all items no longer appear in the list', async()=>{
         let remainingItems = await pages.toDoPage.getAccordionItems(expectedCategoriesDelete[i]);
         expect(remainingItems.length).toBe(0);
     }
+})
 
-
+Then('I am logging out of the user profile page', async()=>{
+    await pages.toDoPage.buttonLoguot.scrollIntoView();
+    await pages.toDoPage.buttonLoguot.click();
+    let expectedUrl = browser.options.baseUrl+'/';
+    await expect(browser).toHaveUrl(expectedUrl);
 })

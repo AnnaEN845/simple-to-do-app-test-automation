@@ -1,8 +1,8 @@
 @registration 
 Feature: User Registration
-  As a new user
-  I want to register on the app
-  So that I can create a to-do list
+As a new user, I want to register on the app so that I can access my to-do list page. 
+This feature handles scenarios for successful registration, preventing duplicate email registration, 
+missing credential errors, and registration with an invalid password.
 
   Background:
     Given I open landing page
@@ -18,11 +18,10 @@ Feature: User Registration
     Then I am redirected to my to-do list page
 
     @regression @negative 
-    Scenario Outline: Prevent registration with an already registered emai
+    Scenario Outline: Prevent registration with an already registered email
     And I fill in the registration form with an already registered email 
     | <name> | <email> | <password> |
     And I submit the registration form
-    # Then I should see an error message saying "Email already in use"
     Then I should see an errorMessage on Register Page
     | <errorMessage>|
     Examples:
@@ -53,7 +52,6 @@ Feature: User Registration
     | John     | test100@test.com | 123456Dd@    | Email already in use |
 
     @regression @integration @end2end 
-    # ----------var parveidot par outline------ 
     Scenario Outline: Handle login after attempting registration with an already registered email
     And I fill in the registration form with an already registered email 
      | <usedName> | <usedEmail> | <usedPassword> |

@@ -1,8 +1,8 @@
 @login
 Feature: User Login
-  As a registered user
-  I want to log in to my account
-  So that I can access and manage my to-do list
+As a registered user, I want to log in to my account so that I can access my to-do list page. 
+This feature covers scenarios for successful login, login with invalid credentials, 
+and error handling for missing credentials.
 
   Background:
     Given I open landing page
@@ -10,9 +10,8 @@ Feature: User Login
 
 
     @smoke @happy-path 
-    Scenario Outline: Successful login
+    Scenario Outline: Successful login - user must be in the DB
     And I fill in the login form with valid credentials
-    # user must be in the DB, functionality for registering new users via API will be added
     | <name> | <email> | <password> |
     And I submit the login form
     Then I am redirected to my to-do list page
@@ -22,10 +21,10 @@ Feature: User Login
     | John | test99@test.com | 123456Dd@ |
     | John | test98@test.com | 123456Dd@ |
 
+    
     @regression @negative @end2end 
-    Scenario Outline: Login with invalid credentials
+    Scenario Outline: Login with invalid credentials - user must be in the DB
     And I fill in the login form with invalid credentials
-# user must be in the DB, functionality for registering new users via API will be added
     | <email>              | <password>   |
     And I submit the login form
     Then I should see an errorMessage on login Page

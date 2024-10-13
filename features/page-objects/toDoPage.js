@@ -6,7 +6,7 @@ export class ToDoPage {
         return browser.$('#userName');
     }
     get buttonLoguot(){
-        return browser.$('//a[@href="/loguot"]');
+        return browser.$("//a[contains(@href, '/logout')]");
     }
     get newTodoCardTitle(){
         return browser.$('//h4[contains(normalize-space(),"New Todo")]');
