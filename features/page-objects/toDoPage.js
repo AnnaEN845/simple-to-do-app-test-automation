@@ -1,3 +1,6 @@
+import { customFunctions } from '../support/custom-functions';
+import { sharedState } from '../support/sharedState';
+
 export class ToDoPage {
     get todoPageTitle() {
         return browser.$('//h1[text()="My Todo List"]');
@@ -160,7 +163,7 @@ export class ToDoPage {
         };
     }
 
-    // // New method to get all to-do items for a category
+    // New method to get all to-do items for a category
     async getAllToDoItemsInCategory(category) {
         let items = await this.getAccordionItems(category);
         let toDoItems = [];
@@ -173,4 +176,70 @@ export class ToDoPage {
         return toDoItems;
     }
 
+
+    async verifyToDoItemsByCategories(categories) {
+        for (const category of categories) {
+            const listTitle = await this.getAccordionListTitle(category);
+            const listTitleText = await listTitle[0].getText();
+            expect(listTitleText.toLowerCase()).toEqual(category.toLowerCase());
+    
+            const categoryItems = await this.getAllToDoItemsInCategory(category);
+            sharedState.toDoItemsInLists.push(...categoryItems);
+        }
+    
+        try {
+            customFunctions.compareToDoArrays(sharedState.addedNewToDo, sharedState.toDoItemsInLists);
+            console.log('To-do items match!');
+        } catch (error) {
+            throw new Error(`Test failed due to mismatching to-do items: ${error.message}`);
+        }
+    }
+
+    async markTodoItemsAsCompleted(categories) {
+        for (const category of categories) {
+            let itemsInList = await this.getAccordionItems(category);
+            for (let index = 0; index < itemsInList.length; index++) {
+                let itemsCheckbox = await this.getAccordionCheckboxes(category)[index];
+                let isChecked = await itemsCheckbox.isSelected();
+                    if (isChecked) {
+                    throw new Error(`Checkbox in category '${category}' at index ${index} is already checked. Test failed.`);
+                    } else {
+                    await itemsCheckbox.click();
+                
+                // Verify that the checkbox is now checked
+                    let isNowChecked = await itemsCheckbox.isSelected();
+                    await expect(isNowChecked).toBe(true)
+                    }
+            }
+        }
+    }
+    
+    async verifyTodoItemsCompleted(categories) {
+        for (const category of categories) {
+            let itemsInList = await this.getAccordionItems(category);
+            for (let index = 0; index < itemsInList.length; index++) {
+                let itemsCheckbox = await this.getAccordionCheckboxes(category)[index];
+                await expect(itemsCheckbox).toBeChecked();
+            }
+        }
+    }
+
+    async deleteTodoItems(categories) {
+        for (const category of categories) {
+            let itemsInList = await this.getAccordionItems(category);
+                for (let index = 0; index < itemsInList.length; index++) {
+                    let deleteBtn = await this.getAccordionDeleteBtns(category)[0];
+                    await deleteBtn.click();
+                    await browser.pause(1000);
+                }
+        }
+    }
+    
+    async verifyTodoItemsDeleted(categories) {
+        for (const category of categories) {
+            const remainingItems = await this.getAccordionItems(category);
+            expect(remainingItems.length).toBe(0);
+        }
+    }
 }
+//*[contains(@action, '/delete-todo')]/input[@type="hidden"] - todo-id delete btn

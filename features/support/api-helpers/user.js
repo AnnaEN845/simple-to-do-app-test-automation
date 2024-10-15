@@ -5,7 +5,7 @@ export default class User extends APIBase {
       super(url);
   }
 
-async createUser(name, email, password) {
+async createUserAPI(name, email, password) {
   const body = { name, username: email, password };
   try {
       const response = await this.post('/register', body);
@@ -28,7 +28,7 @@ async createUser(name, email, password) {
   }
 }
 
-async login(email, password) {
+async loginAPI(email, password) {
   const body = { username: email, password };
   try {
       const response = await this.post('/login', body);
@@ -46,7 +46,7 @@ async login(email, password) {
 }
 
 
-async createTodo(title, description, dueDate, priority, category) {
+async createTodoAPI(title, description, dueDate, priority, category) {
   const body = {
       todotitle: title,
       description,

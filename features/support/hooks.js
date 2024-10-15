@@ -1,10 +1,12 @@
 import { Before } from '@wdio/cucumber-framework';
 import argHelper from '../../arg.helper.js'
 const { getHeadless } = argHelper;
+import { sharedState } from '../support/sharedState';
 Before(async (scenario) => {
 
     console.log("Before hook started");
     try {
+        sharedState.reset();
         // console.log("Reloading session...");
         // await browser.reloadSession();
         // console.log("Session reloaded successfully");

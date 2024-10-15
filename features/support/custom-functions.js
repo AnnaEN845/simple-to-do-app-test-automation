@@ -32,5 +32,15 @@ class CustomFunctions {
       throw new Error(`Differences found: \n${differences.join('\n')}`);
     }
   }
+
+  createTodoItem(title, description, mm, dd, yyyy, priority, category) {
+    return {
+        title: title.toLowerCase(),
+        description: description.toLowerCase(),
+        dueDate: `${yyyy}-${mm}-${dd}`,
+        priority: priority.toLowerCase(),
+        category: category.toLowerCase()
+    };
+}
 }
 export const customFunctions = new CustomFunctions();

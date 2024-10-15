@@ -7,7 +7,7 @@ Scenarios cover the happy path for adding items and viewing them by category.
     Background:
     Given I open landing page
 
-    @smoke @happy-path @end2end
+    @smoke @happy-path @end2end 
     Scenario: Adding a new to-do item
     And I navigate to the register page
     And I fill in the registration form with valid credentials

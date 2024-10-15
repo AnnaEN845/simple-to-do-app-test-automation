@@ -27,13 +27,16 @@ and ensuring the list's accuracy.
       
   
 
-    @regression @happy-path
+    @regression @happy-path 
     Scenario: Marking a to-do item as completed in the list - API
     Given I create multiple todos for the registered user via API
       | title        | description                 | dueDate    | priority | category |
       | Test Todo 1  | This is the first test todo | 2023-12-31 | Medium   | Work     |
       | Test Todo 2  | This is the second test todo| 2024-01-15 | High     | Personal |
       | Test Todo 3  | This is another test todo   | 2024-02-10 | Low      | Shopping |
+      | Test Todo 4  | This is the first test todo | 2023-12-31 | Medium   | Work     |
+      | Test Todo 5  | This is the second test todo| 2024-01-15 | High     | Personal |
+      | Test Todo 6  | This is another test todo   | 2024-02-10 | Low      | Shopping |
     And I refresh the browser
     And I should see all the added items in the list category
     And I mark all to-do items in category as completed
@@ -42,13 +45,16 @@ and ensuring the list's accuracy.
     | shopping |
     Then I should see all items marked as completed in the list
 
-    @regression @happy-path
+    @regression @happy-path 
     Scenario: Deleting a to-do item in the list - API
     Given I create multiple todos for the registered user via API
       | title        | description                 | dueDate    | priority | category |
       | Test Todo 1  | This is the first test todo | 2023-12-31 | Medium   | Work     |
       | Test Todo 2  | This is the second test todo| 2024-01-15 | High     | Personal |
       | Test Todo 3  | This is another test todo   | 2024-02-10 | Low      | Shopping |
+      | Test Todo 4  | This is the first test todo | 2023-12-31 | Medium   | Work     |
+      | Test Todo 5  | This is the second test todo| 2024-01-15 | High     | Personal |
+      | Test Todo 6  | This is another test todo   | 2024-02-10 | Low      | Shopping |
     And I refresh the browser
     And I should see all the added items in the list category
     And I delete all to-do items in category list

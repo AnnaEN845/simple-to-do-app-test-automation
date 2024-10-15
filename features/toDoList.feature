@@ -8,7 +8,7 @@ scenarios to ensure proper functionality.
     Background:
     Given I open landing page
 
-    @smoke @happy-path 
+    @smoke @happy-path @test
     # user must be in the DB, functionality for registering new users via API will be added
     Scenario Outline: Viewing to-do items in the list
     And I navigate to the login page
@@ -25,9 +25,9 @@ scenarios to ensure proper functionality.
     | work         | personal   | shopping   |
     Examples:
     | name | email            | password  |
-    | John | test100@test.com | 123456Dd@ |
-    | John | test99@test.com | 123456Dd@ |
-    | John | test98@test.com | 123456Dd@ |
+    | John | test77@test.com | 123456Dd@ |
+    # | John | test79@test.com | 123456Dd@ |
+    # | John | test78@test.com | 123456Dd@ |
 
     @regression @happy-path 
     # user must be in the DB, functionality for registering new users via API will be added
@@ -50,9 +50,9 @@ scenarios to ensure proper functionality.
     Then I should see all items marked as completed in the list
     Examples:
     | name | email            | password  |
-    | John | test100@test.com | 123456Dd@ |
-    | John | test99@test.com | 123456Dd@ |
-    | John | test98@test.com | 123456Dd@ |
+    | John | test80@test.com | 123456Dd@ |
+    | John | test79@test.com | 123456Dd@ |
+    | John | test78@test.com | 123456Dd@ |
 
 
 
@@ -76,6 +76,6 @@ scenarios to ensure proper functionality.
     Then I should see all items no longer appear in the list
     Examples:
     | name | email            | password  |
-    | John | test100@test.com | 123456Dd@ |
-    | John | test99@test.com | 123456Dd@ |
-    | John | test98@test.com | 123456Dd@ |
+    | John | test80@test.com | 123456Dd@ |
+    | John | test79@test.com | 123456Dd@ |
+    | John | test78@test.com | 123456Dd@ |
