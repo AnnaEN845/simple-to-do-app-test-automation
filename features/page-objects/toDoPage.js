@@ -185,14 +185,21 @@ export class ToDoPage {
     
             const categoryItems = await this.getAllToDoItemsInCategory(category);
             sharedState.toDoItemsInLists.push(...categoryItems);
+            await browser.pause(500);
         }
-    
+        let addeNewToDoArray = JSON.stringify(sharedState.addedNewToDo, null, 2);
+        let toDoItemsInListsArray = JSON.stringify(sharedState.toDoItemsInLists, null, 2);
         try {
             customFunctions.compareToDoArrays(sharedState.addedNewToDo, sharedState.toDoItemsInLists);
             console.log('To-do items match!');
+            console.log("addedNewToDo: " + addeNewToDoArray);
+            console.log("toDoItemsInLists: " + toDoItemsInListsArray);
         } catch (error) {
-            throw new Error(`Test failed due to mismatching to-do items: ${error.message}`);
+            throw new Error(`Test failed due to mismatching to-do items: ${error.message}, addedNewToDo: ${addeNewToDoArray},
+            toDoItemsInLists:${toDoItemsInListsArray}`);
+                
         }
+
     }
 
     async markTodoItemsAsCompleted(categories) {

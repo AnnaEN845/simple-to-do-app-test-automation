@@ -1,8 +1,8 @@
 @todoApi
 Feature: To-Do List Management
-As a logged-in user, I want to manage my to-do items via the API so that I can track my tasks. 
-Scenarios involve creating to-do items through API calls, viewing them, marking them as completed, 
-and ensuring the list's accuracy.
+As a logged-in user, I want to manage my to-do items so that I can track my tasks. 
+Scenarios involve creating new user and adding to-do items through API calls, 
+viewing them, marking them as completed, and ensuring the list's accuracy.
 
   Background:
     Given I have registered a new user- api

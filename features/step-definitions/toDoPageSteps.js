@@ -34,26 +34,6 @@ Then('I have existing to-do items', async(dataTable)=>{
     console.log(addedListsTitles);
 
     await pages.toDoPage.verifyToDoItemsByCategories(addedListsTitles);
-    console.log(sharedState.toDoItemsInLists);
-
-    // for (const category of addedListsTitles) {
-    //     let listTitle = await pages.toDoPage.getAccordionListTitle(category);
-    //     let listTitleText = await listTitle[0].getText();
-    //     expect(listTitleText.toLowerCase()).toEqual(category.toLowerCase());
-
-    //     let categoryItems = await pages.toDoPage.getAllToDoItemsInCategory(category);
-    //     sharedState.toDoItemsInLists.push(...categoryItems);
-    // }
-
-    // console.log(toDoItemsInLists);
-
-    // try {
-    //     customFunctions.compareToDoArrays(sharedState.addedNewToDo, sharedState.toDoItemsInLists);
-    //     console.log('To-do items match!');
-    // } catch (error) {
-    //     console.error(error.message);
-    //     throw new Error(`Test failed due to mismatching to-do items: ${error.message}`);
-    // }
 })
 
 Then('I should see all the added items in the list category',async()=>{
@@ -71,25 +51,6 @@ await browser.pause(2000);
 Then('I should see a list of my to-do items grouped by category', async(dataTable)=>{
 const listsTitlesExpected = dataTable.raw().flat();
 await pages.toDoPage.verifyToDoItemsByCategories(listsTitlesExpected)
-console.log(sharedState.toDoItemsInLists);
-// for (const category of listsTitlesExpected) {
-//     let listTitle = await pages.toDoPage.getAccordionListTitle(category);
-//     let listTitleText = await listTitle[0].getText();
-//     expect(listTitleText.toLowerCase()).toEqual(category.toLowerCase());
-
-//     let categoryItems = await pages.toDoPage.getAllToDoItemsInCategory(category);
-//     sharedState.toDoItemsInLists.push(...categoryItems);
-// }
-
-// console.log(sharedState.toDoItemsInLists);
-
-// try {
-//     customFunctions.compareToDoArrays(sharedState.addedNewToDo, sharedState.toDoItemsInLists);
-//     console.log('To-do items match!');
-// } catch (error) {
-//     console.error(error.message);
-//     throw new Error(`Test failed due to mismatching to-do items: ${error.message}`);
-// }
 })
 
 Then('I mark all to-do items in category as completed',async(dataTable)=>{

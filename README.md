@@ -27,10 +27,13 @@ npm install -g allure-commandline
 
 ## Suported browsers
 - chrome
-- firefox
+- firefox - in working progress
 - edge
 
 ## Usage
+
+### Precondition
+For scenacios from login.feature and toDoList.feature the user and toDos must be in the DB 
 
 ### Running the tests
 
